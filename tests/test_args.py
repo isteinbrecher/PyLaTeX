@@ -204,7 +204,7 @@ def test_tikz():
     repr(a)
 
     p = Plot(name=None, func=None, coordinates=None, error_bar=None,
-             options=None)
+             options=None, override_options=None)
     repr(p)
 
     opt = TikZOptions(None)

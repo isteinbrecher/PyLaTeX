@@ -505,7 +505,8 @@ class Plot(LatexObject):
                  func=None,
                  coordinates=None,
                  error_bar=None,
-                 options=None):
+                 options=None,
+                 override_options=True):
         """
         Args
         ----
@@ -517,6 +518,8 @@ class Plot(LatexObject):
             A list of exact coordinates tat should be plotted.
 
         options: str, list or `~.Options`
+        override_options: bool
+            If the default plot options should be overwritten or appended to.
         """
 
         self.name = name
@@ -524,6 +527,7 @@ class Plot(LatexObject):
         self.coordinates = coordinates
         self.error_bar = error_bar
         self.options = options
+        self.override_options = override_options
 
         super().__init__()
 
@@ -535,7 +539,14 @@ class Plot(LatexObject):
         str
         """
 
-        string = Command('addplot', options=self.options).dumps()
+        if not isinstance(self.override_options, bool):
+            raise TypeError(
+                'The keyword argument override_options has to be of type bool')
+        elif self.override_options:
+            command_string = 'addplot'
+        else:
+            command_string = 'addplot+'
+        string = Command(command_string, options=self.options).dumps()
 
         if self.coordinates is not None:
             string += ' coordinates {%\n'
